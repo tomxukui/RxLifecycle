@@ -1,29 +1,32 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
+group = 'com.github.tomxukui'
+
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdkVersion
-    }
-}
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
 
-repositories {
-    mavenCentral()
-    google()
-    jcenter()
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
 }
 
 dependencies {
+    compileOnly rootProject.ext.dependencies["annotation"]
     api project(':rxlifecycle')
-
-    implementation rootProject.ext.rxAndroid
-    implementation rootProject.ext.supportAnnotations
-
-    testImplementation rootProject.ext.junit
-    testImplementation rootProject.ext.robolectric
+    compileOnly 'io.reactivex.rxjava2:rxandroid:2.1.1'
 }
-
-apply from: "$rootDir/gradle/artifacts.gradle"
-apply from: "$rootDir/gradle/gradle-mvn-push.gradle"
